@@ -1,0 +1,21 @@
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
+from typing import TypedDict, Annotated
+
+load_dotenv()
+#schema
+class Review(TypedDict):
+    summary:Annotated[str, "summary of main attention seeker review part in few lines"]
+    sentiment: Annotated[str, "return sentiment of the review, either negative or positive"]
+
+review_text = ' '.join(open('review.txt').readlines())
+
+model = ChatOpenAI(model='gpt-6-luna')
+#making the model give structured output
+structured_model = model.with_structured_output(Review)
+
+result = structured_model.invoke(review_text)
+
+print(result)
+print(result['summary'])
+print(result['sentiment'])
