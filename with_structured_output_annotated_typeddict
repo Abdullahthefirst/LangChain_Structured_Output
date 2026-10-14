@@ -1,12 +1,16 @@
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
-from typing import TypedDict, Annotated
+from typing import TypedDict, Annotated, Optional, Literal
 
 load_dotenv()
 #schema
 class Review(TypedDict):
     summary:Annotated[str, "summary of main attention seeker review part in few lines"]
-    sentiment: Annotated[str, "return sentiment of the review, either negative or positive"]
+    sentiment: Annotated[Literal['positive', 'negative'], "return sentiment of the review"]
+    pros: Annotated[Optional[list[str]], "Give the list of pros highlighted in the answer"]
+    cons: Annotated[Optional[list[str]], "Give the list of cons highlighted in the answer"]
+    key_themes:Annotated[list[str], "Give the list of key themes discussed"]
+
 
 review_text = ' '.join(open('review.txt').readlines())
 
@@ -17,5 +21,8 @@ structured_model = model.with_structured_output(Review)
 result = structured_model.invoke(review_text)
 
 print(result)
-print(result['summary'])
-print(result['sentiment'])
+print("Summary: ", result['summary'])
+print("Sentiment:", result['sentiment'])
+print("Key-Themes:",result['key_themes'])
+print("Pros:", result['pros'])
+print("Cons:", result['cons'])
