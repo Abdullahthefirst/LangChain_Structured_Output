@@ -11,8 +11,8 @@ class Review(BaseModel):
     key_themes: List[str] = Field(description="Give the list of key themes discussed")
     summary: str = Field(description="summary of main attention seeker review part in few lines")
     sentiment: Literal['positive', 'negative'] = Field(description="return sentiment of the review")
-    pros: Optional[List[str]] = Field(description="Give list of higlighted pros in the review")
-    cons: Optional[List[str]] = Field(description="Give list of higlighted cons in the review")
+    pros: Optional[List[str]] = Field(default=None, description="Give list of higlighted pros in the review")
+    cons: Optional[List[str]] = Field(default=None, description="Give list of higlighted cons in the review")
 
 
 review_text = ' '.join(open('review.txt').readlines())
@@ -31,4 +31,4 @@ result = structured_model.invoke(review_text)
 # print("Cons:", result['cons'])
 
 # pprint(result)
-st.write(result)
+print(result.summary) # The returned Pydantic Object is not subscriptable
